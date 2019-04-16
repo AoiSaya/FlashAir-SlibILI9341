@@ -232,8 +232,6 @@ res_num = ILI9341:spiRead()<br>res_tbl = ILI9341:spiRead(xfer_num,data_num)|SPI 
 
 ## Sample program
 
-<img src="img/ILI9341sample01.jpg" width="250"> <img src="img/ILI9341sample02.jpg" width="250">
-
 >sample.lua       `-- draw graphics demo`  
 >lib/SlibILI9341.lua  
 >lib/SlibBMP.lua  `-- Copy from FlashAir-SlibBMP repository`  
@@ -246,7 +244,7 @@ These files copy to somewhere in FlashAir.
 
 ## Licence
 
-[MIT](https://github.com/AoiSaya/FlashAir-libBMP/blob/master/LICENSE)
+[MIT](https://github.com/AoiSaya/FlashAir-SlibILI9341/blob/master/LICENSE)
 
 ## Author
 
