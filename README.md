@@ -1,17 +1,17 @@
 # FlashAir-SlibILI9341
 
 Lua library for TFT display modules with ILI9341 for FlashAir.  
-<img src="img/ILI9341connect01.jpg" width="300">
+<img src="img/ILI9341connect01.jpg" width="500">
 
 ## Tested equipment
 
 Tested on the following TFT display module and FlashAir W-04 v4.00.03.  
 
- 2.4inch SPI Module ILI9341(SKU:MSP2402)
---- | ---
-240x320 offset=(0,0) gs=0
-<img src="img/ILI9341front01.jpg" width="200">
-<img src="img/ILI9341back01.jpg" width="200">
+240x320 2.4inch SPI Module ILI9341(SKU:MSP2402)  
+
+front | back  
+--- | ---  
+<img src="img/ILI9341front01.jpg" width="200">|<img src="img/ILI9341back01.jpg" width="200">  
 
 ## FlashAir to TFT module connections
 
@@ -191,13 +191,9 @@ bgcolor : BBBBB_GGGGGG_RRRRR (64K(16bpp) back ground color)
 ## Usage
 ### Sample of init()
 
- 1.44inch with ILI9341 V1.1 |
+240x320 2.4inch SPI Module ILI9341(SKU:MSP2402) |
 --- |
 <img src="img/ILI9341rotation01.jpg" width="800"> |
-
-1.44inch with ILI9341 V2.1 |
---- |
-<img src="img/ILI9341rotation02.jpg" width="800"> |
 
 ### Description of the command
 
