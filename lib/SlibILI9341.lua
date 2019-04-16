@@ -325,16 +325,17 @@ function ILI9341:init(type,rotate,xSize,ySize,rOffset,dOffset,gm)
 
 	self:ledOff()
 
-	if rotate==0 then mv,mx,my,swp,hDrc,vDrc = 0,1,0,false, 1,-1 end
-	if rotate==1 then mv,mx,my,swp,hDrc,vDrc = 1,1,1,true, -1, 1 end
-	if rotate==2 then mv,mx,my,swp,hDrc,vDrc = 0,0,1,false, 1,-1 end
-	if rotate==3 then mv,mx,my,swp,hDrc,vDrc = 1,0,0,true, -1, 1 end
-
+	if rotate==0 then mv,mx,my,swp,hDrc,vDrc = 0,1,1,false, 1,-1 end
+	if rotate==1 then mv,mx,my,swp,hDrc,vDrc = 1,1,0,true, -1, 1 end
+	if rotate==2 then mv,mx,my,swp,hDrc,vDrc = 0,0,0,false, 1,-1 end
+	if rotate==3 then mv,mx,my,swp,hDrc,vDrc = 1,0,1,true, -1, 1 end
+--[[
 	if gm==3 then
-		dOffset = (my>0) and 160-ySize-dOffset or dOffset
+		dOffset = (my>0) and 240-ySize-dOffset or dOffset
 	else
-		dOffset = (my>0) and 132-ySize-dOffset or dOffset
+		dOffset = (my>0) and 320-ySize-dOffset or dOffset
 	end
+--]]
 	hSize = swp and ySize or xSize
 	vSize = swp and xSize or ySize
 

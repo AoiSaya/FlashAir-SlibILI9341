@@ -2,7 +2,7 @@
 -- Sample of SlibILI9341.lua for W4.00.03
 -- Copyright (c) 2019, Saya
 -- All rights reserved.
--- 2019/03/20 rev.0.01
+-- 2019/03/21 rev.0.01
 -----------------------------------------------
 function chkBreak(n)
 	sleep(n or 0)
@@ -34,6 +34,7 @@ local lcd = require(libDir .. "SlibILI9341")
 local bmp = require(libDir .. "SlibBMP")
 local font74 = require(fontDir .. "font74")
 local x1,y1,x2,y2,c
+local mx,my,rOfs,dOfs,gm
 
 --color bar
 local cbar={
@@ -73,7 +74,11 @@ local COL_Y = to64K(0xFFFF00) -- yellow
 local COL_W = to64K(0xFFFFFF) -- white
 
 for rot = 0,3 do
-	local mx,my,rOfs,dOfs,gm = 320,240,0,0,0
+	if rot==0 or rot==2 then
+		mx,my,rOfs,dOfs,gm = 240,320,0,0,0
+	else
+		mx,my,rOfs,dOfs,gm = 320,240,0,0,0
+	end
 
 	lcd:init(1, rot, mx, my, rOfs, dOfs, gm)
 	lcd:dspOn()
@@ -153,16 +158,22 @@ end
 
 --locate and println demo
 	lcd:locate(0,28)
-	for i=1,5 do
+	for i=1,7 do
 		lcd:locate(nil,nil,i,to64K(cbar[i]))
 		lcd:println(string.sub("01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqr",1,mx/4/i-0.1))
 	end
 
---put, put2 demo
+--]]
+---[[
+    --put, put2 demo
 	local balloonBmp = bmp:loadFile(imgDir .. "balloon01.bmp",1)
 	local balloonImg = bmp:conv64K(balloonBmp)
 	lcd:put(0,0,balloonImg)
 	lcd:put2(64,64,balloonImg)
+
+    local balloonImg = bmp:conv64K(imgDir .. "balloon02.bmp",0,0,mx,my,0x0000)
+	collectgarbage()
+	lcd:put(0,0,balloonImg)
 
 	sleep(1000)
 	balloonBmp=nil

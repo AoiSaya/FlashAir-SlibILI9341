@@ -7,7 +7,7 @@ Lua library for TFT display modules with ILI9341 for FlashAir.
 
 Tested on the following TFT display module and FlashAir W-04 v4.00.03.  
 
- 2.4inch SPI Module with ILI9341
+ 2.4inch SPI Module ILI9341(SKU:MSP2402)
 --- | ---
 240x320 offset=(0,0) gs=0
 <img src="img/ILI9341front01.jpg" width="200">
@@ -35,11 +35,11 @@ VCC| VCC
 FlashAir|TYPE1|TYPE2|TYPE3|TYPE4|TYPE21|TYPE22|TYPE23
 --- | --- | --- | --- | --- | --- | --- | ---
 ---  |w/Reset|w/PIO|w/LED|w/SPI|primaly|secondary|twin
-CMD  |SDA |SDA |SDA |SDA/DO |SDA   |SDA  |SDA
-DAT0 |SCL |SCL |SCL |SCL/CLK|SCL   |SCL  |SCL
-DAT1 |DCX |DCX |DCX |DCX/-- |DCX   |DCX  |DCX
-DAT2 |CSX |CSX |CSX |CSX/DI |CSX   |(CSX)|CSX
-DAT3 |RESX|PIO |LED |-- /CS |(CSX2)|CSX2 |CSX2
+CMD  |SDI |SDI |SDI |SDI/DO |SDI   |SDI  |SDI
+DAT0 |CLK |CLK |CLK |CLK/CLK|CLK   |CLK  |CLK
+DAT1 |DC  |DC  |DC  |DC /-- |DC    |DC   |DC 
+DAT2 |CS  |CS  |CS  |CS /DI |CS    |(CS )|CS 
+DAT3 |RESET|PIO |LED |-- /CS |(CS2 )|CS2  |CS2 
 
 *TYPE21,TYPE22,TYPE23 for two display*
 
@@ -49,11 +49,11 @@ Module Reset is hardwere reset.
 FlashAir(Pin#) | ST7735 TFT | Power | comment
 --- | --- | --- | ---
 CLK (5) |--- |Pull-down(10korm) to GND
-CMD (2) |SDA |
-DAT0(7) |SCL |
-DAT1(8) |DCX |
-DAT2(9) |CSX |
-DAT3(1) |RESX|
+CMD (2) |SDI |
+DAT0(7) |CLK |
+DAT1(8) |DC  |
+DAT2(9) |CS  |
+DAT3(1) |RESET|
 ---     |LED |3.3V|
 VCC (4) |VCC |3.3V   
 VSS(3,6)|GND |GND    
@@ -64,12 +64,12 @@ DAT3 of FlashAir can be used for PIO.
 FlashAir(Pin#) | ST7735 TFT | Power | comment
 --- | --- | --- | ---
 CLK (5) |--- |Pull-down(10korm) to GND
-CMD (2) |SDA |
-DAT0(7) |SCL |
-DAT1(8) |DCX |
-DAT2(9) |CSX |
+CMD (2) |SDI |
+DAT0(7) |CLK |
+DAT1(8) |DC  |
+DAT2(9) |CS  |
 DAT3(1) |PIO |
----     |RESX|Pull-up(10korm) to 3.3V
+---     |RESET|Pull-up(10korm) to 3.3V
 ---     |LED |3.3V
 VCC (4) |VCC |3.3V
 VSS(3,6)|GND |GND
@@ -80,12 +80,12 @@ DAT3 of FlashAir for LED backlight on/off control.
 FlashAir(Pin#) | ST7735 TFT | Power | comment
 --- | --- | --- | ---
 CLK (5) |--- |Pull-down(10korm) to GND
-CMD (2) |SDA |
-DAT0(7) |SCL |
-DAT1(8) |DCX |
-DAT2(9) |CSX |
+CMD (2) |SDI |
+DAT0(7) |CLK |
+DAT1(8) |DC  |
+DAT2(9) |CS  |
 DAT3(1) |LED ||connect through 10kohm
----     |RESX|Pull-up(10korm) to 3.3V
+---     |RESET|Pull-up(10korm) to 3.3V
 VCC (4) |VCC |3.3V
 VSS(3,6)|GND |GND 
 
@@ -95,12 +95,12 @@ CMD,DAT0,DAT2,DAT3 can be used for SPI.
 FlashAir(Pin#) | ST7735 TFT | SPI device | Power | comment
 --- | --- | --- | --- | ---
 CLK (5) |--- |---| Pull-down(10korm) to GND
-CMD (2) |SDA |DO |
-DAT0(7) |SCL |CLK|
-DAT1(8) |DCX |---|
-DAT2(9) |CSX |DI | Pull-up(10korm) to 3.3V
+CMD (2) |SDI |DO |
+DAT0(7) |CLK |CLK|
+DAT1(8) |DC  |---|
+DAT2(9) |CS  |DI | Pull-up(10korm) to 3.3V
 DAT3(1) |--- |CS |
----     |RESX|---| Pull-up(10korm) to 3.3V
+---     |RESET|---| Pull-up(10korm) to 3.3V
 ---     |LED |---| 3.3V
 VCC (4) |VCC |VCC| 3.3V
 VSS(3,6)|GND |GND| GND
@@ -111,12 +111,12 @@ If you connect two displays, use this for primaly display.
 FlashAir(Pin#) | ST7735 TFT | Power | comment
 --- | --- | --- | ---
 CLK (5) |--- | Pull-down(10korm) to GND
-CMD (2) |SDA |
-DAT0(7) |SCL |
-DAT1(8) |DCX |
-DAT2(9) |CSX | Pull-up(10korm) to 3.3V
-DAT3(1) |(CSX2)|
----     |RESX| Pull-up(10korm) to 3.3V
+CMD (2) |SDI |
+DAT0(7) |CLK |
+DAT1(8) |DC  |
+DAT2(9) |CS  | Pull-up(10korm) to 3.3V
+DAT3(1) |(CS2 )|
+---     |RESET| Pull-up(10korm) to 3.3V
 ---     |LED | 3.3V
 VCC (4) |VCC | 3.3V
 VSS(3,6)|GND | GND
@@ -127,12 +127,12 @@ If you connect two displays, use this for secondaly display.
 FlashAir(Pin#) | ST7735 TFT | Power | comment
 --- | --- | --- | ---
 CLK (5) |--- | Pull-down(10korm) to GND
-CMD (2) |SDA |
-DAT0(7) |SCL |
-DAT1(8) |DCX |
-DAT2(9) |(CSX)| Pull-up(10korm) to 3.3V
-DAT3(1) |CSX2|
----     |RESX| Pull-up(10korm) to 3.3V
+CMD (2) |SDI |
+DAT0(7) |CLK |
+DAT1(8) |DC  |
+DAT2(9) |(CS )| Pull-up(10korm) to 3.3V
+DAT3(1) |CS2 |
+---     |RESET| Pull-up(10korm) to 3.3V
 ---     |LED | 3.3V
 VCC (4) |VCC | 3.3V
 VSS(3,6)|GND | GND
@@ -144,12 +144,12 @@ You can draw each or both.
 FlashAir(Pin#) | ST7735 TFT1 | ST7735 TFT2 | Power | comment
 --- | --- | --- | --- | ---
 CLK (5) |--- |--- | Pull-down(10korm) to GND
-CMD (2) |SDA |SDA |
-DAT0(7) |SCL |SCL |
-DAT1(8) |DCX |DCX |
-DAT2(9) |CSX |--- | Pull-up(10korm) to 3.3V
-DAT3(1) |--- |CSX2|
----     |RESX|RESX| Pull-up(10korm) to 3.3V
+CMD (2) |SDI |SDI |
+DAT0(7) |CLK |CLK |
+DAT1(8) |DC  |DC  |
+DAT2(9) |CS  |--- | Pull-up(10korm) to 3.3V
+DAT3(1) |--- |CS2 |
+---     |RESET|RESET| Pull-up(10korm) to 3.3V
 ---     |LED |LED | 3.3V
 VCC (4) |VCC |VCC | 3.3V
 VSS(3,6)|GND |GND | GND
