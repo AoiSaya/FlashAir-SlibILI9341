@@ -12,7 +12,7 @@ function chkBreak(n)
 end
 fa.sharedmemory("write", 0x00, 0x01, "-")
 
-local script_path = function()
+function script_path()
 	local  str = debug.getinfo(2, "S").source:sub(2)
 	return str:match("(.*/)")
 end
@@ -99,10 +99,11 @@ for rot = 0,3 do
 		lcd:boxFill(5*mx/7+i*mx/21,my*9/12,5*mx/7+(i+1)*mx/21,my-1,to64K(cbar[i+19]))
 	end
 	lcd:boxFill(6*mx/7,my*9/12,mx-1,my-1,to64K(cbar[22]))
+--]]
+---[[
 	lcd:box(0,0,mx-1,my-1,COL_W) -- for offset check
 	chkBreak()
 	sleep(1000)
-
 	local rnd = math.random
 	lcd:cls()
 	collectgarbage()
@@ -165,13 +166,13 @@ end
 
 --]]
 ---[[
-    --put, put2 demo
+--put, put2 demo
 	local balloonBmp = bmp:loadFile(imgDir .. "balloon01.bmp",1)
 	local balloonImg = bmp:conv64K(balloonBmp)
 	lcd:put(0,0,balloonImg)
 	lcd:put2(64,64,balloonImg)
 
-    local balloonImg = bmp:conv64K(imgDir .. "balloon02.bmp",0,0,mx,my,0x0000)
+	local balloonImg = bmp:conv64K(imgDir .. "balloon02.bmp",0,0,mx,my,0x0000)
 	collectgarbage()
 	lcd:put(0,0,balloonImg)
 
