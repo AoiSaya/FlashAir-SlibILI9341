@@ -2,7 +2,7 @@
 -- SoraMame library of ILI9341@65K for W4.00.03
 -- Copyright (c) 2019, Saya
 -- All rights reserved.
--- 2019/03/20 rev.0.01
+-- 2019/06/01 rev.0.02
 -----------------------------------------------
 --[[
 Pin assign
@@ -365,6 +365,10 @@ function ILI9341:init(type,rotate,xSize,ySize,rOffset,dOffset,gm)
 	self.x	  = 0
 	self.y	  = 0
 	self.x0	  = 0
+	self.y0	  = 0
+	self.xspc = 0
+	self.yspc = 0
+	self.yh   = 0
 	self.fc	  = "\255\255"
 	self.bc	  = "\000\000"
 	self.font = {}
@@ -469,6 +473,7 @@ function ILI9341:flip(rFlip,dFlip)
 end
 
 function ILI9341:pset(x,y,color)
+	color = color or self.fc
 	if (x<0 or x>self.xMax) then return end
 	if (y<0 or y>self.yMax) then return end
 	local h,v = self:pTrans(x,y)
@@ -476,6 +481,7 @@ function ILI9341:pset(x,y,color)
 end
 
 function ILI9341:line(x1,y1,x2,y2,color)
+	color = color or self.fc
 	local swap
 	local h1,h2,hn,ha,hb,hd,hv,hr,hs,h
 	local v1,v2,vn,vd,v
@@ -530,6 +536,7 @@ function ILI9341:line(x1,y1,x2,y2,color)
 end
 
 function ILI9341:box(x1,y1,x2,y2,color)
+	color = color or self.fc
 	self:line(x1,y1,x2,y1,color)
 	self:line(x2,y1,x2,y2,color)
 	self:line(x2,y2,x1,y2,color)
@@ -537,6 +544,7 @@ function ILI9341:box(x1,y1,x2,y2,color)
 end
 
 function ILI9341:boxFill(x1,y1,x2,y2,color)
+	color = color or self.fc
 	local xMax = self.xMax
 	local yMax = self.yMax
 	local bx = bit32.extract
@@ -581,6 +589,7 @@ function ILI9341:boxFill(x1,y1,x2,y2,color)
 end
 
 function ILI9341:circle(x,y,xr,yr,color)
+	color = color or self.fc
 	local c
 	local x1,y1,x2,y2
 	local sin = math.sin
@@ -601,6 +610,7 @@ function ILI9341:circle(x,y,xr,yr,color)
 end
 
 function ILI9341:circleFill(x,y,xr,yr,color)
+	color = color or self.fc
 	local h1,v1,h2,v2
 	local x1,x2,y1,y2,xs,r2,xn
 	local xMax = self.xMax
@@ -713,9 +723,10 @@ function ILI9341:put2(x,y,bitmap)
 	collectgarbage()
 end
 
-function ILI9341:locate(x,y,mag,color,bgcolor,font)
+function ILI9341:locate(x,y,mag,xspc,yspc)
 	local bx = bit32.extract
 	local mf = math.floor
+	local fh, fh1, fh2
 
 	if x then
 		self.x	= mf(x+0.5)
@@ -723,90 +734,138 @@ function ILI9341:locate(x,y,mag,color,bgcolor,font)
 	end
 	if y then
 		self.y	= mf(y+0.5)
+		self.y0 = self.y
 	end
 	if mag then
 		self.mag= mf(mag)
 	end
-	if color then
-		self.fc = string.char(bx(color,8,8),bx(color,0,8))
+	if mag then
+		self.mag= mf(mag)
+	end
+	if xspc then
+		self.xspc= mf(xspc)
+	end
+	if yspc then
+		self.yspc= mf(yspc)
+	end
+end
+
+function ILI9341:color(fgcolor,bgcolor)
+	local bx = bit32.extract
+
+	if fgcolor then
+		self.fc = string.char(bx(fgcolor,8,8),bx(fgcolor,0,8))
 	end
 	if bgcolor then
 		self.bc = string.char(bx(bgcolor,8,8),bx(bgcolor,0,8))
 	end
+end
+
+function ILI9341:setFont(font)
 	if font then
 		self.font = font
 	end
 end
 
 function ILI9341:print(str)
-	local n,c,b,bk,bj,il,is,sn,slen,sp
-	local h1,v1,h2,v2
+	local n,c,bk,bj,is,slen
+	local h1,v1,h2,v2,b,h,w
 	local s = ""
 	local p = {}
-	local fw = self.font.width
-	local fh = self.font.height
+	local font = self.font
+	local fh1,fh2,fh
+	local xs = self.xspc
 	local mg = self.mag
 	local bx = bit32.extract
 	local mf = math.floor
 	local s0 = string.rep(self.bc,mg)
 	local s1 = string.rep(self.fc,mg)
 	local ti = table.insert
+	local rows = 1
+
+	if font.fontList then -- jfont using
+		fh1 = font.font1.height
+		fh2 = font.font2.height
+		fh = (fh1>fh2) and fh1 or fh2
+	else -- ANK only
+		fh = font.height
+	end
+	yh = fh + self.yspc
+	self.yh = yh
 
 	self:setRamMode(0,0,1)
 
-	is = 1
-	slen = #str
-	while slen>0 do
-		sn = mf((self.xMax+1-self.x)/mg/fw)
-		il = sn<slen and sn or slen
-		slen = slen - il
-		h1,v1,h2,v2 = self:bTrans(self.x,self.y,self.xMax,self.y+mg*fh-1)
-		self:setWindow(h1,v1,h2,v2)
---		if self.mx==0 then self:writeRamCmd(h1,v2) else	self:writeRamCmd(h2,v1) end
+	h1,v1,h2,v2 = self:bTrans(self.x,self.y,self.xMax,self.y+mg*fh-1)
+	self:setWindow(h1,v1,h2,v2)
 
-		bk=1
-		for i=is,is+il-1 do
-			c = str.sub(str,i,i)
-			b = self.font[c]
-			for j=1,fw do
-				bj,bk=b[j],bk+fh
-				for k=fh-1,0,-1 do ti(p,bx(bj,k)>0 and s1 or s0) end
-				if bk>800 or mg>1 then
-					s = table.concat(p)
-					for l=1,mg do
-						self:writeRamData(s)
-					end
-					bk=1
-					p={}
-				end
+	bk = 0
+	is = 1
+	n  = 0
+	slen = #str
+	while is<=slen do
+		if font.fontList then -- jfont using
+			b,h,w,is = font:getFont(str, is)
+		else -- ANK only
+			c = str:sub(is,is)
+			b,h,w,is = font[c],font.height,font.width,is+1
+		end
+
+		if self.x+mg*(w+xs)-1>self.xMax then
+			if bk>0 then
+				s = table.concat(p)
+				self:writeRamData(s:rep(mg))
+				bk,p,s=0,{},""
+				collectgarbage()
+			end
+			self.x,self.y = self.x0,self.y+mg*yh
+			if self.y+mg*yh-1>self.yMax then
+				self.y = self.y0
+				break
+			end
+			rows = rows+1
+			h1,v1,h2,v2 = self:bTrans(self.x,self.y,self.xMax,self.y+mg*fh-1)
+			self:setWindow(h1,v1,h2,v2)
+		end
+		for j=1,w+xs do
+			if j>w then
+				bj,bk=0,bk+h
+			else
+				bj,bk=b[j],bk+h
+			end
+			for k=h-1,0,-1 do ti(p,bx(bj,k)>0 and s1 or s0) end
+			if bk>800 or mg>1 then
+				s = table.concat(p)
+				self:writeRamData(s:rep(mg))
+				bk,p,s=0,{},""
+				collectgarbage()
 			end
 		end
-		if bk>1 and il>0 then
-			s = table.concat(p)
-			for l=1,mg do
-				 self:writeRamData(s)
-			end
-			p={}
-		end
-		self.x = self.x+mg*fw*il
-		if slen>0 or self.x>self.xMax then
-			self.x,self.y = self.x0,self.y+mg*fh
-			is = is+il
-		end
-		s=""
-		collectgarbage()
+		self.x = self.x+mg*(w+xs)
+		n = is-1
 	end
+	if bk>0 then
+		s = table.concat(p)
+		self:writeRamData(s:rep(mg))
+	end
+
+	bk,p,s=0,{},""
+	collectgarbage()
 	self:resetWindow()
 	self:setRamMode(0,0,0)
 
-	return self.x,self.y
+	return self.x,self.y,n,rows
 end
 
 function ILI9341:println(str)
-	self:print(str)
-	self.x,self.y = self.x0,self.y+self.mag*self.font.height
+	local x,y,n,rows = self:print(str)
+	local yh = self.yh
 
-	return self.x,self.y
+	self.x,self.y = self.x0,self.y+self.mag*yh
+	if self.y+self.mag*yh-1>self.yMax then
+		self.y = self.y0
+	end
+
+	return self.x,self.y,n,rows
 end
 
 function ILI9341:pio(ctrl, data)

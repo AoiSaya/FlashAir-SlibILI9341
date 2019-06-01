@@ -2,7 +2,7 @@
 -- Sample of SlibILI9341.lua for W4.00.03
 -- Copyright (c) 2019, Saya
 -- All rights reserved.
--- 2019/03/21 rev.0.01
+-- 2019/06/01 rev.0.02
 -----------------------------------------------
 function chkBreak(n)
 	sleep(n or 0)
@@ -149,9 +149,10 @@ end
 	n = 0x20
 	for i=0,21,7 do
 		chkBreak()
-		lcd:locate(0,i,1,nil,0x0000,font74)
+		lcd:setFont(font74)
+		lcd:locate(0,i,1)
 		for j=0, mx-1, 4 do
-			lcd:locate(nil,nil,nil,to64K(cbar[(i/7+j)%7+1]))
+			lcd:color(to64K(cbar[(i/7+j)%7+1]))
 			lcd:print(string.char(n))
 			n = n>=0x7E and 0x20 or n+1
 		end
@@ -160,7 +161,8 @@ end
 --locate and println demo
 	lcd:locate(0,28)
 	for i=1,7 do
-		lcd:locate(nil,nil,i,to64K(cbar[i]))
+		lcd:locate(nil,nil,i)
+		lcd:color(to64K(cbar[i]))
 		lcd:println(string.sub("01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqr",1,mx/4/i-0.1))
 	end
 
