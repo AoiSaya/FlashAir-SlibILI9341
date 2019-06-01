@@ -245,6 +245,8 @@ These files copy to somewhere in FlashAir.
 If you want to run "sample_kanji.lua", please prepare the following.  
 
 ### 日本語フォントを使う方法
+<img src="img/ILI9341sample01.jpg" width="300">
+
 日本語フォントを使う場合は、下記のレポジトリをご参照ください。  
 https://github.com/AoiSaya/FlashAir_SlibJfont  
 
