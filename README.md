@@ -3,6 +3,8 @@
 Lua library for TFT display modules with ILI9341 for FlashAir.  
 <img src="img/ILI9341connect01.jpg" width="500">
 
+2019/6/1 Japanese font support. Inter-character space and line interval support by locate command.
+
 ## Tested equipment
 
 Tested on the following TFT display module and FlashAir W-04 v4.00.03.  
@@ -207,15 +209,17 @@ ILI9341:writeEnd()   | Disable control.
 ILI9341:cls()        | Clear screen.
 ILI9341:dspOn()      | Display contents of RAM.
 ILI9341:dspOff()     | Do not display contents of RAM.
-ILI9341:pset(x,y,color) | Plot point at (x,y).
-ILI9341:line(x1,y1,x2,y2,color) | Plot line (x1,y1)-(x2,y2).
-ILI9341:box(x1,y1,x2,y2,color) | Plot box (x1,y1)-(x2,y2).
-ILI9341:boxFill(x1,y1,x2,y2,color) | Plot filled box (x1,y1)-(x2,y2).
-ILI9341:circle(x,y,xr,yr,color) | Plot circle of center(x,y), radius(xr,yr).
-ILI9341:circleFill(x,y,xr,yr,color) | Plot filled circle of center(x,y), radius(xr,yr).
+ILI9341:pset(x,y,color) | Plot point at (x,y). If color is omitted, fgcolor is used.
+ILI9341:line(x1,y1,x2,y2,color) | Plot line (x1,y1)-(x2,y2). If color is omitted, fgcolor is used.
+ILI9341:box(x1,y1,x2,y2,color) | Plot box (x1,y1)-(x2,y2). If color is omitted, fgcolor is used.
+ILI9341:boxFill(x1,y1,x2,y2,color) | Plot filled box (x1,y1)-(x2,y2). If color is omitted, fgcolor is used.
+ILI9341:circle(x,y,xr,yr,color) | Plot circle of center(x,y), radius(xr,yr). If color is omitted, fgcolor is used.
+ILI9341:circleFill(x,y,xr,yr,color) | Plot filled circle of center(x,y), radius(xr,yr). If color is omitted, fgcolor is used.
 ILI9341:put(x,y,bitmap) | Put 16bpp bitmap at upper left coordinates with (x,y).
 ILI9341:put2(x,y,bitmap)| Put 16bpp flat bitmap faster at upper left coordinates with (x,y).
-ILI9341:locate(x,y,mag,color,bgcolor,font) | Locate cursor, set print area(x,y)-(xSize-1,ySize-1), attributions and font.<br>If you do not want to change any arguments you can substitute nil.
+ILI9341:color(fgcolor,bgcolor) | Default color setting.
+ILI9341:locate(x,y,mag,xsapce,yspace) | Locate cursor, set print area(x,y)-(xSize-1,ySize-1).**mag:** Text magnification. default is 1.<br>**xspace:** Inter-character space. default is 0.<br>**yspace:** line interval. default is 0. <br>If you do not want to change any arguments you can substitute nil.
+ILI9341:setFont(font) | Set font table or return value of SlibJfont.lua.
 x,y=ILI9341:print(str) | Print alphabets and return next cursor position.
 x,y=ILI9341:println(str) | Print alphabets, creates a new line and return next cursor position.
 ILI9341:ledOn() | LED backlight ON at TYPE2.
@@ -229,6 +233,7 @@ res_num = ILI9341:spiRead()<br>res_tbl = ILI9341:spiRead(xfer_num,data_num)|SPI 
 ## Sample program
 
 >sample.lua       `-- draw graphics demo`  
+>sample_kanji.lua `-- Kanji character support demo`  
 >lib/SlibILI9341.lua  
 >lib/SlibBMP.lua  `-- Copy from FlashAir-SlibBMP repository`  
 >img/balloon01.bmp  
@@ -237,10 +242,37 @@ res_num = ILI9341:spiRead()<br>res_tbl = ILI9341:spiRead(xfer_num,data_num)|SPI 
 
 These files copy to somewhere in FlashAir.
 
+If you want to run "sample_kanji.lua", please prepare the following.  
+
+### 日本語フォントを使う方法
+日本語フォントを使う場合は、下記のレポジトリをご参照ください。  
+https://github.com/AoiSaya/FlashAir_SlibJfont  
+
+例として、"sample_kanji.lua"を実行する手順を以下に示します。  
+上記レポジトリから以下のファイルを入手してFlashAirに保存します。  
+
+    lib/SlibJfont.lua  -- ライブラリ  
+    lib/Utf8Euc_jp.tbl -- UTF-8をEUC-JPに変換する際の変換テーブル  
+    font/bdf2sef.lua   -- ファイル形式変換プログラム  
+
+### サンプル用フォントの入手
+[文字情報サービス環境 CHISE](http://www.chise.org/dist/fonts/BDF/JISX0213/)から  
+jiskan24-2003-1.bdf.gz をダウンロードして解凍し、下記ファイルをfont/ の下に置きます。  
+    jiskan24-2003-1.bdf  
+    12x24rk.bdf  
+
+次に bdf2sef.lua を編集して、末尾に  
+
+    convBdf2Bin("jiskan24-2003-1.bdf")  
+    convBdf2Bin("k12x24rk.bdf")  
+    
+を追加してください。  
+bdf2sef.lua を実行すると、font/ の下に"jiskan24-2003-1.sef" と "k12x24rk.sef" が生成されます。  
+この状態で "sample_kanji.lua" を実行すると、LCD上に日本語が表示されます。  
 
 ## Licence
 
-[MIT](https://github.com/AoiSaya/FlashAir-SlibILI9341/blob/master/LICENSE)
+[MIT](/LICENSE)
 
 ## Author
 
