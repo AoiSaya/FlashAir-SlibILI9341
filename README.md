@@ -220,8 +220,8 @@ ILI9341:put2(x,y,bitmap)| Put 16bpp flat bitmap faster at upper left coordinates
 ILI9341:color(fgcolor,bgcolor) | Default color setting.
 ILI9341:locate(x,y,mag,xsapce,yspace) | Locate cursor, set print area(x,y)-(xSize-1,ySize-1).**mag:** Text magnification. default is 1.<br>**xspace:** Inter-character space. default is 0.<br>**yspace:** line interval. default is 0. <br>If you do not want to change any arguments you can substitute nil.
 ILI9341:setFont(font) | Set font table or return value of SlibJfont.lua.
-x,y=ILI9341:print(str) | Print alphabets and return next cursor position.
-x,y=ILI9341:println(str) | Print alphabets, creates a new line and return next cursor position.
+x,y,n,rows=ILI9341:print(str) | Print alphabets and return next cursor position. Output will be stopped if the drawing range is exceeded.<br>**n:** Number of characters output.<br>**rows:** Number of lines output.
+x,y,n,rows=ILI9341:println(str) | Print alphabets, creates a new line and return next cursor position. Output will be stopped if the drawing range is exceeded.<br>**n:** Number of characters output.<br>**rows:** Number of lines output.
 ILI9341:ledOn() | LED backlight ON at TYPE3.
 ILI9341:ledOff() | LED backlight OFF at TYPE3.
 ret=ILI9341:pio(ctrl,data) | PIO control of DAT3 at TYPE2.<br>PIO default is input.<br>**ctrl:** 0:input, 1:output. data: value for output<br>**return:** input value or nil at TYPE1
