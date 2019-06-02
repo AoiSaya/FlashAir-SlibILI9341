@@ -222,9 +222,9 @@ ILI9341:locate(x,y,mag,xsapce,yspace) | Locate cursor, set print area(x,y)-(xSiz
 ILI9341:setFont(font) | Set font table or return value of SlibJfont.lua.
 x,y=ILI9341:print(str) | Print alphabets and return next cursor position.
 x,y=ILI9341:println(str) | Print alphabets, creates a new line and return next cursor position.
-ILI9341:ledOn() | LED backlight ON at TYPE2.
-ILI9341:ledOff() | LED backlight OFF at TYPE2.
-ret=ILI9341:pio(ctrl,data) | PIO control of DAT3 at TYPE3.<br>PIO default is input.<br>**ctrl:** 0:input, 1:output. data: value for output<br>**return:** input value or nil at TYPE1
+ILI9341:ledOn() | LED backlight ON at TYPE3.
+ILI9341:ledOff() | LED backlight OFF at TYPE3.
+ret=ILI9341:pio(ctrl,data) | PIO control of DAT3 at TYPE2.<br>PIO default is input.<br>**ctrl:** 0:input, 1:output. data: value for output<br>**return:** input value or nil at TYPE1
 ILI9341:spiInit(period,mode,bit,cstype)|SPI init for TYPE4.<br>**period,mode,bit:** same as fa.spi(...)<br>**cstype:** 0:low enable, 1:high enable, 2:always High-Z
 res = ILI9341:spiWrite(data_num)<br>res = ILI9341:spiWrite(data_str,xfer_num)|SPI write for TYPE4.<br>**data_num,data_str,xfer_num,res:** same as fa.spi("write", ...)
 res_num = ILI9341:spiRead()<br>res_tbl = ILI9341:spiRead(xfer_num,data_num)|SPI read for TYPE4.<br>**xfer_num,data_num,res_num,res_tbl:** same as fa.spi("read", ...)
